@@ -32,7 +32,7 @@ class Login extends Component {
     handleFormSubmit = event => {
         event.preventDefault();
         if (this.state.password && this.state.email) {
-            API.saveUser({
+            API.getUser({
                 email: this.state.email,
                 password: this.state.password,
             })
@@ -70,7 +70,7 @@ class Login extends Component {
                         </form>
 
                         <br />
-                        <p>Or sign up <a href="/">here</a></p>
+                        <p>Or sign up <a href="/signup">here</a></p>
                     </div>
                 </div>
             </div>
