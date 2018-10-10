@@ -17,10 +17,8 @@ class Signup extends Component {
 
     isAuthenticated(auth) {
         if (auth.status === 200) {
-            console.log(auth.config.data);
-            this.setState({
-                authenticated: true
-            });
+            sessionStorage.setItem('token', auth.config.data);
+            window.location.href = "/protected";
         }
     }
 
@@ -50,7 +48,7 @@ class Signup extends Component {
             <div className="container">
                 <div className="row">
                     <div className="col-md-6 col-md-offset-3">
-                        <h2>Login Form</h2>
+                        <h2>SignUp Form</h2>
 
                         <form className="login">
                             <InputElement
@@ -84,7 +82,7 @@ class Signup extends Component {
                             <button
                                 onClick={this.handleFormSubmit}
                                 className="btn btn-default"
-                                disabled={!(this.state.email && this.state.password)}>Login</button>
+                                disabled={!(this.state.email && this.state.password)}>Sign Up</button>
                         </form>
 
                         <br />

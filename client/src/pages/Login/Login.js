@@ -1,24 +1,27 @@
-import React, { Component } from "react";
+import React from "react";
 import { InputElement } from "../../components/InputElement/InputElement";
 import API from "../../utils/API";
 
-class Login extends Component {
-    state = {
-        authenticated:false,
-        email: "",
-        password: ""
-    };
+class Login extends React.Component {
+    constructor(props) {
+        super(props);
 
-    componentDidMount(){
+        this.state = {
+            authenticated: false,
+            email: "",
+            password: ""
+        };
+    }
+
+
+    componentDidMount() {
         this.isAuthenticated({})
     }
 
-    isAuthenticated(auth){
-        if (auth.status === 200){
-            console.log(auth.config.data);
-            this.setState({
-                authenticated: true
-            });
+    isAuthenticated(auth) {
+        if (auth.status === 200) {
+            sessionStorage.setItem('token', auth.config.data);
+            window.location.href = "/protected";
         }
     }
 
@@ -36,8 +39,8 @@ class Login extends Component {
                 email: this.state.email,
                 password: this.state.password,
             })
-            .then(res => this.isAuthenticated(res))
-            .catch(err => console.log(err));
+                .then(res => this.isAuthenticated(res))
+                .catch(err => console.log(err));
         }
     };
 

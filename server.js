@@ -2,9 +2,9 @@
 var express = require("express");
 var bodyParser = require("body-parser");
 var session = require("express-session");
+
 // Requiring passport as we've configured it
 var passport = require("./config/passport");
-//var routes = require("./routes");
 
 // Setting up port and requiring models for syncing
 var PORT = process.env.PORT || 3001;
@@ -26,7 +26,6 @@ app.use(passport.session());
 //app.use(routes);
 
 // Requiring our routes
-require("./routes/html-routes.js")(app);
 require("./routes/api-routes.js")(app);
 
 // Syncing our database and logging a message to the user upon success
