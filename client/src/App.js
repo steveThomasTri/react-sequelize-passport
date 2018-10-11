@@ -5,6 +5,9 @@ import Signup from "./pages/Signup";
 import Nav from "./components/Nav";
 import Home from "./pages/Home";
 import Auth from "./utils/auth.js";
+import FightPage from "./pages/FightPage"
+
+import "./App.css"
 
 const Protected = () => <h3>Protected Content</h3>;
 
@@ -45,33 +48,45 @@ class App extends Component {
 
   render() {
     return (
-      <div className="App">
-        <Nav {...(sessionStorage.getItem("token") ? { whoSignedIn: JSON.parse(sessionStorage.getItem("token")).email } : {})} />
-        <header className="App-header">
-          <h1 className="App-title">Welcome to React Router Protection Sample</h1>
-        </header>
-        <BrowserRouter>
+      <BrowserRouter>
+        <div className="App">
+          <Nav {...(sessionStorage.getItem("token") ? { whoSignedIn: JSON.parse(sessionStorage.getItem("token")).email } : {})} />
+          <nav className="navbar navbar-default">
+            <div className="container-fluid">
+              <div className="navbar-collapse">
+                <ul>
+                  {this.state.authenticated ? (
+                    <div>
+                      <li><Link to="/public">Home</Link></li>
+                      <li><Link to="/fight">Fight</Link></li>
+                      <li><Link to="/protected">Protected Content</Link></li>
+                    </div>
+                  ) : (
+                      <div>
+                        <li><Link to="/public">Home</Link></li>
+                        <li><Link to="/fight">Fight</Link></li>
+                        <li><Link to="/login">Login Here</Link></li>
+                        <li><Link to="/signup">SignUp Here</Link></li>
+                        <li><Link to="/protected">Protected Content</Link></li>
+                      </div>
+                    )}
+                </ul>
+              </div>
+            </div>
+          </nav>
+          <header className="App-header">
+            <h1 className="App-title">Welcome to React Router Protection Sample</h1>
+          </header>
           <div>
             <AuthButton />
-            <ul>
-              <li><Link to="/public">Home</Link></li>
-
-              {this.state.authenticated ? (<div></div>) : (
-                <div>
-                  <li><Link to="/login">Login Here</Link></li>
-                  <li><Link to="/signup">SignUp Here</Link></li>
-                </div>
-              )}
-
-              <li><Link to="/protected">Protected Content</Link></li>
-            </ul>
+            <Route path='/fight' component={FightPage} />
             <Route path="/public" component={Home} />
             <Route path="/login" component={Login} />
             <Route path='/signup' component={Signup} />
             <ProtectedRoute path='/protected' component={Protected} />
           </div>
-        </BrowserRouter>
-      </div>
+        </div>
+      </BrowserRouter>
     );
   }
 }
