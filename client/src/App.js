@@ -2,7 +2,6 @@ import React, { Component } from "react";
 import { BrowserRouter, Route, Redirect, withRouter, Link } from "react-router-dom";
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
-import Nav from "./components/Nav";
 import Home from "./pages/Home";
 import Auth from "./utils/auth.js";
 import FightPage from "./pages/FightPage"
@@ -10,6 +9,8 @@ import FightPage from "./pages/FightPage"
 import "./App.css"
 
 const Protected = () => <h3>Protected Content</h3>;
+
+const PlaceHolder = () => <div></div>;
 
 const ProtectedRoute = ({ component: Component, ...rest }) => (
   <Route {...rest} render={(props) => (
@@ -25,7 +26,7 @@ const ProtectedRoute = ({ component: Component, ...rest }) => (
 const AuthButton = withRouter(({ history }) => (
   Auth.isUserAuthenticated() ? (
     <p>
-      Welcome to this amazing content! <button onClick={() => {
+      <button onClick={() => {
         Auth.deauthenticateUser(() => history.push('/')); window.location.href = "/";
       }}>Sign out</button>
     </p>
@@ -37,7 +38,8 @@ const AuthButton = withRouter(({ history }) => (
 class App extends Component {
 
   state = {
-    authenticated: false
+    authenticated: false,
+    mainquestionnumber: 0
   }
 
   componentDidMount() {
@@ -46,14 +48,17 @@ class App extends Component {
     });
   }
 
+  quest = (number) => {
+    this.setState({ mainquestionnumber: number + 1 });
+  }
+
   render() {
     return (
       <BrowserRouter>
         <div className="App">
-          <Nav {...(sessionStorage.getItem("token") ? { whoSignedIn: JSON.parse(sessionStorage.getItem("token")).email } : {})} />
           <nav className="navbar navbar-default">
             <div className="container-fluid">
-              <div className="navbar-collapse">
+              <div className="col-md-4">
                 <ul>
                   {this.state.authenticated ? (
                     <div>
@@ -72,18 +77,27 @@ class App extends Component {
                     )}
                 </ul>
               </div>
+              <div className="col-md-4 text-center">
+                {(sessionStorage.getItem("token") ? <div>Welcome back, {JSON.parse(sessionStorage.getItem("token")).email}</div> : <div></div>)}
+              </div>
+              <div className="col-md-4 text-right">
+                <AuthButton />
+              </div>
             </div>
           </nav>
-          <header className="App-header">
-            <h1 className="App-title">Welcome to React Router Protection Sample</h1>
-          </header>
           <div>
-            <AuthButton />
-            <Route path='/fight' component={FightPage} />
+            <Route
+              path='/fight'
+              render={(props) => <FightPage {...props}
+                questionnumber={this.state.mainquestionnumber}
+                changeQuestion={this.quest}
+              />}
+            />
             <Route path="/public" component={Home} />
             <Route path="/login" component={Login} />
             <Route path='/signup' component={Signup} />
             <ProtectedRoute path='/protected' component={Protected} />
+            <ProtectedRoute path="/fight" component={PlaceHolder} />
           </div>
         </div>
       </BrowserRouter>

@@ -7,7 +7,8 @@ export default {
   getUser: function(userData) {
     return axios.post("/api/login", userData)
   },
-  getQuestions: function(){
-    return axios.get("https://opentdb.com/api.php?amount=30&category=15&type=boolean")
+  getQuestions: function(category){
+    console.log(category)
+    return axios.get("https://opentdb.com/api.php?amount=20&category="+category+"&type=boolean")
   }
 };
